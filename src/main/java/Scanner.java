@@ -59,7 +59,7 @@ public class Scanner {
     }
 
     public void scanTokens() {
-        for (int position = 0; !isAtEnd(position); position++) {
+        for (position = 0; !isAtEnd(position); position++) {
             char c = sourceFile.charAt(position);
             switch (c) {
                 case '(':
