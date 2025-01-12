@@ -8,7 +8,6 @@ public class Scanner {
     private List<Token> tokens;
     private String sourceFile;
     private int line = 1;
-    @Getter
     private int errorCode = 0;
     private int position = 0;
 
@@ -22,6 +21,9 @@ public class Scanner {
         this.errorCode = errorCode;
     }
 
+    public int getErrorCode(){
+        return errorCode;
+    }
     private boolean isAtEnd(int position) {
         return position >= sourceFile.length();
     }
