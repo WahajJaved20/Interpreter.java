@@ -59,11 +59,11 @@ public class Scanner {
         StringBuilder sequence = new StringBuilder();
         int current = position;
         char character = sourceFile.charAt(current);
-        while (!isAtEnd(current+1) && isDigit(character)) {
-            character = sourceFile.charAt(current);
-            if(character == '.') break;
+        while (!isAtEnd(current) && isDigit(character)) {
             sequence.append(character);
             current++;
+            if(!isAtEnd(current + 1)) character = sourceFile.charAt(current);
+            if(character == '.') break;
         }
         if(character == '.'){
             sequence.append(character);
@@ -71,12 +71,11 @@ public class Scanner {
         }
         character = sourceFile.charAt(current);
         while (!isAtEnd(current) && isDigit(character)) {
-            character = sourceFile.charAt(current);
             sequence.append(character);
             current++;
+            if(!isAtEnd(current + 1)) character = sourceFile.charAt(current);
         }
-        line++;
-        position = current;
+        position = --current;
         tokens.add(new Token(TokenType.NUMBER, sequence.toString(), String.valueOf(Double.parseDouble(sequence.toString())), line));
     }
 
