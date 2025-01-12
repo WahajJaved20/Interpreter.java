@@ -45,7 +45,7 @@ public class Scanner {
             current++;
         }
         if (isAtEnd(current) || character != '"') {
-            error(line, "Unterminated string.", 0);
+            error(line, "Unterminated string.", 65);
             position = current;
             return;
         }
