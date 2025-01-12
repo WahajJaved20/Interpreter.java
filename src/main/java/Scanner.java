@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Character.isDigit;
+
 
 public class Scanner {
     private List<Token> tokens;
@@ -51,6 +53,27 @@ public class Scanner {
         }
         position = current;
         tokens.add(new Token(TokenType.STRING, sequence.toString(), sequence.toString(), line));
+    }
+
+    private void handleNumbers(){
+        StringBuilder sequence = new StringBuilder();
+        int current = position + 1;
+        char character = sourceFile.charAt(current);
+        while (!isAtEnd(current) && isDigit(character)) {
+            sequence.append(character);
+            current++;
+            character = sourceFile.charAt(current);
+        }
+        if(character == '.'){
+            sequence.append(character);
+        }
+        while (!isAtEnd(current) && isDigit(character)) {
+            sequence.append(character);
+            current++;
+            character = sourceFile.charAt(current);
+        }
+        line++;
+        tokens.add(new Token(TokenType.NUMBER, String.valueOf(Double.parseDouble(String.valueOf(sequence))), sequence.toString(), line));
     }
 
     void printTokens(){
@@ -125,8 +148,12 @@ public class Scanner {
                     line++;
                     break;
                 default:
-                    error(line, "Unexpected character: "+ c, 65);
-                    break;
+                    if(isDigit(c)){
+                        handleNumbers();
+                    }else {
+                        error(line, "Unexpected character: " + c, 65);
+                        break;
+                    }
             }
         }
         tokens.add(new Token(TokenType.EOF));
