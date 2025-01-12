@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.lang.Character.isDigit;
 
@@ -10,6 +12,27 @@ public class Scanner {
     private int line = 1;
     private int errorCode = 0;
     private int position = 0;
+    private static final Map<String, TokenType> keywords;
+
+    static {
+        keywords = new HashMap<>();
+        keywords.put("and",    TokenType.AND);
+        keywords.put("class",  TokenType.CLASS);
+        keywords.put("else",   TokenType.ELSE);
+        keywords.put("false",  TokenType.FALSE);
+        keywords.put("for",    TokenType.FOR);
+        keywords.put("fun",    TokenType.FUN);
+        keywords.put("if",     TokenType.IF);
+        keywords.put("nil",    TokenType.NIL);
+        keywords.put("or",     TokenType.OR);
+        keywords.put("print",  TokenType.PRINT);
+        keywords.put("return", TokenType.RETURN);
+        keywords.put("super",  TokenType.SUPER);
+        keywords.put("this",   TokenType.THIS);
+        keywords.put("true",   TokenType.TRUE);
+        keywords.put("var",    TokenType.VAR);
+        keywords.put("while",  TokenType.WHILE);
+    }
 
     Scanner(String sourceFile) {
         this.sourceFile = sourceFile;
@@ -102,7 +125,11 @@ public class Scanner {
             current++;
         }
         position = --current;
-        tokens.add(new Token(TokenType.IDENTIFIER, sequence.toString(), null, line));
+        if(keywords.get(sequence.toString()) != null){
+            tokens.add(new Token(keywords.get(sequence.toString()), sequence.toString(), null, line));
+        }else{
+            tokens.add(new Token(TokenType.IDENTIFIER, sequence.toString(), null, line));
+        }
     }
 
     void printTokens(){
