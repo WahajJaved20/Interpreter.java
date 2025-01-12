@@ -60,9 +60,9 @@ public class Scanner {
         int current = position;
         char character = sourceFile.charAt(current);
         while (!isAtEnd(current) && isDigit(character)) {
+            character = sourceFile.charAt(current);
             sequence.append(character);
             current++;
-            character = sourceFile.charAt(current);
         }
         if(character == '.'){
             sequence.append(character);
