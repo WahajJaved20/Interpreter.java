@@ -1,7 +1,6 @@
 import lombok.Getter;
 
 public class Token {
-    @Getter
     private TokenType tokenType;
     private int line;
     private String lexeme;
