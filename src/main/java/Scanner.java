@@ -110,6 +110,7 @@ public class Scanner {
                             c = sourceFile.charAt(position);
                             position++;
                         }
+                        position --;
                         line++;
                         break;
                     }
