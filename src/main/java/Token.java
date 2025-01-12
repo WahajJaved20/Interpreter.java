@@ -1,5 +1,3 @@
-import lombok.Getter;
-
 public class Token {
     private TokenType tokenType;
     private int line;
