@@ -57,7 +57,7 @@ public class Scanner {
 
     private void handleNumbers(){
         StringBuilder sequence = new StringBuilder();
-        int current = position + 1;
+        int current = position;
         char character = sourceFile.charAt(current);
         while (!isAtEnd(current) && isDigit(character)) {
             sequence.append(character);
@@ -73,7 +73,8 @@ public class Scanner {
             character = sourceFile.charAt(current);
         }
         line++;
-        tokens.add(new Token(TokenType.NUMBER, String.valueOf(Double.parseDouble(String.valueOf(sequence))), sequence.toString(), line));
+        position = current;
+        tokens.add(new Token(TokenType.NUMBER, sequence.toString(), String.valueOf(Double.parseDouble(sequence.toString())), line));
     }
 
     void printTokens(){
