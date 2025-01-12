@@ -18,7 +18,7 @@ public class Scanner {
     }
 
     private void error(int line, String message, int errorCode) {
-        System.err.println("[line + " + line + "] Error: " + message);
+        System.err.println("[line " + line + "] Error: " + message);
         this.errorCode = errorCode;
     }
 

@@ -32,7 +32,7 @@ public class Main {
       Scanner scanner = new Scanner(fileContents);
       scanner.scanTokens();
       scanner.printTokens();
-//      return scanner.getErrorCode();
+      System.exit(scanner.getErrorCode());
     }
   }
 }
