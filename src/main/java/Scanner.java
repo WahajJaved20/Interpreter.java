@@ -59,18 +59,21 @@ public class Scanner {
         StringBuilder sequence = new StringBuilder();
         int current = position;
         char character = sourceFile.charAt(current);
-        while (!isAtEnd(current) && isDigit(character)) {
+        while (!isAtEnd(current+1) && isDigit(character)) {
             character = sourceFile.charAt(current);
+            if(character == '.') break;
             sequence.append(character);
             current++;
         }
         if(character == '.'){
             sequence.append(character);
+            current++;
         }
+        character = sourceFile.charAt(current);
         while (!isAtEnd(current) && isDigit(character)) {
+            character = sourceFile.charAt(current);
             sequence.append(character);
             current++;
-            character = sourceFile.charAt(current);
         }
         line++;
         position = current;
