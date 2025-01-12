@@ -126,7 +126,7 @@ public class Scanner {
                     break;
             }
         }
-        tokens.add(new Token(TokenType.END_OF_FILE));
+        tokens.add(new Token(TokenType.EOF));
     }
 }
 
