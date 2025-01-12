@@ -107,13 +107,14 @@ public class Scanner {
                 case '/':
                     if (match('/')) {
                         while (!isAtEnd(position) && c != '\n') {
-                            position++;
                             c = sourceFile.charAt(position);
+                            position++;
                         }
                         line++;
                         break;
                     }
                     tokens.add(new Token(TokenType.SLASH, "/", line));
+                    break;
                 case '"':
                     handleStrings();
                     break;
