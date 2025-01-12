@@ -61,21 +61,25 @@ public class Scanner {
         char character = sourceFile.charAt(current);
         while (!isAtEnd(current) && isDigit(character)) {
             sequence.append(character);
+            if(!isAtEnd(current + 1)) character = sourceFile.charAt(current + 1);
             current++;
-            if(!isAtEnd(current + 1)) character = sourceFile.charAt(current);
             if(character == '.') break;
         }
         if(character == '.'){
             sequence.append(character);
             current++;
+            character = sourceFile.charAt(current);
+            while (!isAtEnd(current) && isDigit(character)) {
+                sequence.append(character);
+                if(!isAtEnd(current + 1)) character = sourceFile.charAt(current + 1);
+                current++;
+            }
+            position = current;
+        }else{
+            position = --current;
         }
-        character = sourceFile.charAt(current);
-        while (!isAtEnd(current) && isDigit(character)) {
-            sequence.append(character);
-            current++;
-            if(!isAtEnd(current + 1)) character = sourceFile.charAt(current);
-        }
-        position = --current;
+
+
         tokens.add(new Token(TokenType.NUMBER, sequence.toString(), String.valueOf(Double.parseDouble(sequence.toString())), line));
     }
 
