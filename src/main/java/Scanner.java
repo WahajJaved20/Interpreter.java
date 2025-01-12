@@ -16,6 +16,16 @@ public class Scanner {
         tokens = new ArrayList<>();
     }
 
+    private boolean isAlphanumeric(char c) {
+        return isAlpha(c) || isDigit(c);
+    }
+
+    private boolean isAlpha(char c) {
+        return (c >= 'a' && c <= 'z') ||
+                (c >= 'A' && c <= 'Z') ||
+                c == '_';
+    }
+
     private void error(int line, String message, int errorCode) {
         System.err.println("[line " + line + "] Error: " + message);
         this.errorCode = errorCode;
@@ -24,6 +34,7 @@ public class Scanner {
     public int getErrorCode(){
         return errorCode;
     }
+
     private boolean isAtEnd(int position) {
         return position >= sourceFile.length();
     }
@@ -78,9 +89,20 @@ public class Scanner {
         }else{
             position = --current;
         }
-
-
         tokens.add(new Token(TokenType.NUMBER, sequence.toString(), String.valueOf(Double.parseDouble(sequence.toString())), line));
+    }
+
+    void handleIdentifiers(){
+        StringBuilder sequence = new StringBuilder();
+        int current = position;
+        char character = sourceFile.charAt(current);
+        while (!isAtEnd(current) && isAlphanumeric(character)) {
+            sequence.append(character);
+            if(!isAtEnd(current + 1)) character = sourceFile.charAt(current + 1);
+            current++;
+        }
+        position = --current;
+        tokens.add(new Token(TokenType.IDENTIFIER, sequence.toString(), null, line));
     }
 
     void printTokens(){
@@ -157,7 +179,9 @@ public class Scanner {
                 default:
                     if(isDigit(c)){
                         handleNumbers();
-                    }else {
+                    } else if(isAlphanumeric(c)){
+                        handleIdentifiers();
+                    } else {
                         error(line, "Unexpected character: " + c, 65);
                         break;
                     }
@@ -165,6 +189,8 @@ public class Scanner {
         }
         tokens.add(new Token(TokenType.EOF));
     }
+
+
 }
 
 
