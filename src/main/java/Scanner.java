@@ -37,9 +37,10 @@ public class Scanner {
         StringBuilder sequence = new StringBuilder();
         int current = position + 1;
         char character = sourceFile.charAt(current);
-        while (!isAtEnd(current) && character != '"') {
+        while (!isAtEnd(current)) {
             if (character == '\n') line++;
             character = sourceFile.charAt(current);
+            if(character == '"') break;
             sequence.append(character);
             current++;
         }
