@@ -39,9 +39,9 @@ public class Scanner {
         char character = sourceFile.charAt(current);
         while (!isAtEnd(current) && character != '"') {
             if (character == '\n') line++;
+            character = sourceFile.charAt(current);
             sequence.append(character);
             current++;
-            character = sourceFile.charAt(current);
         }
         if (isAtEnd(current) || character != '"') {
             error(line, "Unterminated string.", 65);
