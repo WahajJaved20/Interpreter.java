@@ -39,7 +39,7 @@ public class Main {
             List<Token> tokens = scanner.scanTokens();
             if(scanner.hadScanningError) System.exit(65);
             Parser parser = new Parser(tokens);
-            Expr expression = parser.parse();
+            Expr expression = parser.parseExpression();
             if (parser.hadError) System.exit(parser.getErrorCode());
             System.out.println(new AstPrinter().print(expression));
         } else if(command.equals("evaluate")){
@@ -47,10 +47,10 @@ public class Main {
             List<Token> tokens = scanner.scanTokens();
             if(scanner.hadScanningError) System.exit(65);
             Parser parser = new Parser(tokens);
-            Expr expression = parser.parse();
+            List<Stmt> statements = parser.parse();
             if (parser.hadError) System.exit(parser.getErrorCode());
             Interpreter interpreter = new Interpreter();
-            interpreter.interpret(expression);
+            interpreter.interpret(statements);
             if(interpreter.hadRuntimeError) System.exit(70);
         }
     }

@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -9,6 +10,12 @@ import java.util.List;
             ?	            if statement
 */
 
+/*
+        program        → statement* EOF ;
+        statement      → exprStmt | printStmt ;
+        exprStmt       → expression ";" ;
+        printStmt      → "print" expression ";" ;
+ */
 /* Target Grammar
         expression     → equality ;
         equality       → comparison ( ( "!=" | "==" ) comparison )* ;
@@ -22,11 +29,14 @@ import java.util.List;
  */
 /* PARSING TECHNIQUE => RECURSIVE DESCENT PARSING */
 public class Parser {
-    private static class ParseError extends RuntimeException {}
+    private static class ParseError extends RuntimeException {
+    }
+
     private final List<Token> tokens;
     private int current = 0;
     public boolean hadError;
     private int errorCode = 0;
+
     Parser(List<Token> tokens) {
         this.tokens = tokens;
     }
@@ -161,6 +171,7 @@ public class Parser {
     private Token previous() {
         return tokens.get(current - 1);
     }
+
     private void synchronize() {
         advance();
 
@@ -182,10 +193,39 @@ public class Parser {
             advance();
         }
     }
-    public int getErrorCode(){
+
+    public int getErrorCode() {
         return errorCode;
     }
-    Expr parse() {
+
+
+
+    private Stmt statement() {
+        if (match(TokenType.PRINT)) return printStatement();
+
+        return expressionStatement();
+    }
+
+    private Stmt printStatement() {
+        Expr value = expression();
+        consume(TokenType.SEMICOLON, "Expect ';' after value.");
+        return new Stmt.Print(value);
+    }
+
+    private Stmt expressionStatement() {
+        Expr expr = expression();
+        consume(TokenType.SEMICOLON, "Expect ';' after expression.");
+        return new Stmt.Expression(expr);
+    }
+
+    List<Stmt> parse() {
+        List<Stmt> statements = new ArrayList<>();
+        while (!isAtEnd()) {
+            statements.add(statement());
+        }
+        return statements;
+    }
+    Expr parseExpression() {
         try {
             return expression();
         } catch (ParseError error) {
