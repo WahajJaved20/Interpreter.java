@@ -35,7 +35,7 @@ public class Main {
         }else if(command.equals("parse")){
             Parser parser = new Parser(tokens);
             Expr expression = parser.parse();
-            if(parser.hadError) return;
+            if(parser.hadError) System.exit(parser.getErrorCode());
             System.out.println(new AstPrinter().print(expression));
         }
     }

@@ -26,7 +26,7 @@ public class Parser {
     private final List<Token> tokens;
     private int current = 0;
     public boolean hadError;
-
+    private int errorCode = 0;
     Parser(List<Token> tokens) {
         this.tokens = tokens;
     }
@@ -127,6 +127,7 @@ public class Parser {
     private void report(int line, String where, String message) {
         System.err.println("[line " + line + "] Error: " + where + ": " + message);
         this.hadError = true;
+        this.errorCode = 65;
     }
 
     private boolean match(TokenType... types) {
@@ -180,6 +181,9 @@ public class Parser {
 
             advance();
         }
+    }
+    public int getErrorCode(){
+        return errorCode;
     }
     Expr parse() {
         try {
