@@ -42,14 +42,24 @@ public class Main {
             Expr expression = parser.parseExpression();
             if (parser.hadError) System.exit(parser.getErrorCode());
             System.out.println(new AstPrinter().print(expression));
-        } else if(command.equals("evaluate") || command.equals("run")){
+        } else if(command.equals("evaluate")){
+            Scanner scanner = new Scanner(fileContents);
+            List<Token> tokens = scanner.scanTokens();
+            if(scanner.hadScanningError) System.exit(65);
+            Parser parser = new Parser(tokens);
+            Expr expression = parser.parseExpression();
+            if (parser.hadError) System.exit(parser.getErrorCode());
+            Interpreter interpreter = new Interpreter();
+            interpreter.interpret(expression);
+            if(interpreter.hadRuntimeError) System.exit(70);
+        } else if(command.equals("run")){
             Scanner scanner = new Scanner(fileContents);
             List<Token> tokens = scanner.scanTokens();
             if(scanner.hadScanningError) System.exit(65);
             Parser parser = new Parser(tokens);
             List<Stmt> statements = List.of();
             try{
-                 statements = parser.parse();
+                statements = parser.parse();
             }catch (Exception e){
             }
             if (parser.hadError) System.exit(parser.getErrorCode());

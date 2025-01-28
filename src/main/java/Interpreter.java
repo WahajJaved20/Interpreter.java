@@ -129,7 +129,14 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
             runtimeError(error);
         }
     }
-
+    void interpret(Expr expression) {
+        try {
+            Object value = evaluate(expression);
+            System.out.println(stringify(value));
+        } catch (RuntimeError error) {
+            runtimeError(error);
+        }
+    }
 
     private String stringify(Object object) {
         if (object == null) return "nil";
