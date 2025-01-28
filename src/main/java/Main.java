@@ -29,7 +29,9 @@ public class Main {
         String fileContents = readFileContents(filename);
         Scanner scanner = new Scanner(fileContents);
         List<Token> tokens = scanner.scanTokens();
+        if(scanner.hadScanningError) System.exit(65);
         Parser parser = new Parser(tokens);
+        if (parser.hadError) System.exit(parser.getErrorCode());
         Expr expression = parser.parse();
         if (command.equals("tokenize")) {
             scanner.printTokens();

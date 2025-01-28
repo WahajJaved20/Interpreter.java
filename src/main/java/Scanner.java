@@ -13,7 +13,7 @@ public class Scanner {
     private int errorCode = 0;
     private int position = 0;
     private static final Map<String, TokenType> keywords;
-
+    public boolean hadScanningError = false;
     static {
         keywords = new HashMap<>();
         keywords.put("and", TokenType.AND);
@@ -51,6 +51,7 @@ public class Scanner {
 
     private void error(int line, String message, int errorCode) {
         System.err.println("[line " + line + "] Error: " + message);
+        hadScanningError = true;
         this.errorCode = errorCode;
     }
 
