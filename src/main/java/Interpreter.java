@@ -2,6 +2,14 @@ import java.util.List;
 
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     public boolean hadRuntimeError = false;
+    private Environment environment = new Environment();
+
+    @Override
+    public Object visitAssignExpr(Expr.Assign expr) {
+        Object value = evaluate(expr.value);
+        environment.assign(expr.name, value);
+        return value;
+    }
 
     @Override
     public Void visitExpressionStmt(Stmt.Expression stmt) {
@@ -14,6 +22,27 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         Object value = evaluate(stmt.expression);
         System.out.println(stringify(value));
         return null;
+    }
+
+    @Override
+    public Void visitVarStmt(Stmt.Var stmt) {
+        Object value = null;
+        if (stmt.initializer != null) {
+            value = evaluate(stmt.initializer);
+        }
+
+        environment.define(stmt.name.lexeme, value);
+        return null;
+    }
+
+    @Override
+    public Object visitVariableExpr(Expr.Variable expr) {
+        return environment.get(expr.name);
+    }
+
+    @Override
+    public Object visitLiteralExpr(Expr.Literal expr) {
+        return expr.value;
     }
 
     @Override
@@ -69,10 +98,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         return evaluate(expr.expression);
     }
 
-    @Override
-    public Object visitLiteralExpr(Expr.Literal expr) {
-        return expr.value;
-    }
+
 
     @Override
     public Object visitUnaryExpr(Expr.Unary expr) {
@@ -89,6 +115,8 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         // Unreachable.
         return null;
     }
+
+
 
     private void checkNumberOperands(Token operator,
                                      Object left, Object right) {

@@ -1,1 +1,2 @@
-"world" < false
+var a = "foo";
+print a;
