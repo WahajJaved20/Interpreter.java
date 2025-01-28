@@ -27,19 +27,28 @@ public class Main {
         String command = args[0];
         String filename = args[1];
         String fileContents = readFileContents(filename);
-        Scanner scanner = new Scanner(fileContents);
-        List<Token> tokens = scanner.scanTokens();
-        if(scanner.hadScanningError) System.exit(65);
-        Parser parser = new Parser(tokens);
-        if (parser.hadError) System.exit(parser.getErrorCode());
-        Expr expression = parser.parse();
+
+
         if (command.equals("tokenize")) {
+            Scanner scanner = new Scanner(fileContents);
+            List<Token> tokens = scanner.scanTokens();
             scanner.printTokens();
             System.exit(scanner.getErrorCode());
         } else if (command.equals("parse")) {
+            Scanner scanner = new Scanner(fileContents);
+            List<Token> tokens = scanner.scanTokens();
+            if(scanner.hadScanningError) System.exit(65);
+            Parser parser = new Parser(tokens);
+            Expr expression = parser.parse();
             if (parser.hadError) System.exit(parser.getErrorCode());
             System.out.println(new AstPrinter().print(expression));
         } else if(command.equals("evaluate")){
+            Scanner scanner = new Scanner(fileContents);
+            List<Token> tokens = scanner.scanTokens();
+            if(scanner.hadScanningError) System.exit(65);
+            Parser parser = new Parser(tokens);
+            Expr expression = parser.parse();
+            if (parser.hadError) System.exit(parser.getErrorCode());
             Interpreter interpreter = new Interpreter();
             interpreter.interpret(expression);
             if(interpreter.hadRuntimeError) System.exit(70);
