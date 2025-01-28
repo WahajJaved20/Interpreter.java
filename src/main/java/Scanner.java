@@ -108,10 +108,8 @@ public class Scanner {
                 if (!isAtEnd(current + 1)) character = sourceFile.charAt(current + 1);
                 current++;
             }
-            position = current;
-        } else {
-            position = --current;
         }
+        position = --current;
         tokens.add(new Token(TokenType.NUMBER, sequence.toString(), String.valueOf(Double.parseDouble(sequence.toString())), line));
     }
 
