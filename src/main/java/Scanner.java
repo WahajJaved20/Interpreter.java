@@ -8,7 +8,7 @@ import static java.lang.Character.isDigit;
 
 public class Scanner {
     private List<Token> tokens;
-    private String sourceFile;
+    private final String sourceFile;
     private int line = 1;
     private int errorCode = 0;
     private int position = 0;
@@ -16,22 +16,22 @@ public class Scanner {
 
     static {
         keywords = new HashMap<>();
-        keywords.put("and",    TokenType.AND);
-        keywords.put("class",  TokenType.CLASS);
-        keywords.put("else",   TokenType.ELSE);
-        keywords.put("false",  TokenType.FALSE);
-        keywords.put("for",    TokenType.FOR);
-        keywords.put("fun",    TokenType.FUN);
-        keywords.put("if",     TokenType.IF);
-        keywords.put("nil",    TokenType.NIL);
-        keywords.put("or",     TokenType.OR);
-        keywords.put("print",  TokenType.PRINT);
+        keywords.put("and", TokenType.AND);
+        keywords.put("class", TokenType.CLASS);
+        keywords.put("else", TokenType.ELSE);
+        keywords.put("false", TokenType.FALSE);
+        keywords.put("for", TokenType.FOR);
+        keywords.put("fun", TokenType.FUN);
+        keywords.put("if", TokenType.IF);
+        keywords.put("nil", TokenType.NIL);
+        keywords.put("or", TokenType.OR);
+        keywords.put("print", TokenType.PRINT);
         keywords.put("return", TokenType.RETURN);
-        keywords.put("super",  TokenType.SUPER);
-        keywords.put("this",   TokenType.THIS);
-        keywords.put("true",   TokenType.TRUE);
-        keywords.put("var",    TokenType.VAR);
-        keywords.put("while",  TokenType.WHILE);
+        keywords.put("super", TokenType.SUPER);
+        keywords.put("this", TokenType.THIS);
+        keywords.put("true", TokenType.TRUE);
+        keywords.put("var", TokenType.VAR);
+        keywords.put("while", TokenType.WHILE);
     }
 
     Scanner(String sourceFile) {
@@ -54,7 +54,7 @@ public class Scanner {
         this.errorCode = errorCode;
     }
 
-    public int getErrorCode(){
+    public int getErrorCode() {
         return errorCode;
     }
 
@@ -76,7 +76,7 @@ public class Scanner {
         while (!isAtEnd(current)) {
             if (character == '\n') line++;
             character = sourceFile.charAt(current);
-            if(character == '"') break;
+            if (character == '"') break;
             sequence.append(character);
             current++;
         }
@@ -89,56 +89,56 @@ public class Scanner {
         tokens.add(new Token(TokenType.STRING, sequence.toString(), sequence.toString(), line));
     }
 
-    private void handleNumbers(){
+    private void handleNumbers() {
         StringBuilder sequence = new StringBuilder();
         int current = position;
         char character = sourceFile.charAt(current);
         while (!isAtEnd(current) && isDigit(character)) {
             sequence.append(character);
-            if(!isAtEnd(current + 1)) character = sourceFile.charAt(current + 1);
+            if (!isAtEnd(current + 1)) character = sourceFile.charAt(current + 1);
             current++;
-            if(character == '.') break;
+            if (character == '.') break;
         }
-        if(character == '.'){
+        if (character == '.') {
             sequence.append(character);
             current++;
             character = sourceFile.charAt(current);
             while (!isAtEnd(current) && isDigit(character)) {
                 sequence.append(character);
-                if(!isAtEnd(current + 1)) character = sourceFile.charAt(current + 1);
+                if (!isAtEnd(current + 1)) character = sourceFile.charAt(current + 1);
                 current++;
             }
             position = current;
-        }else{
+        } else {
             position = --current;
         }
         tokens.add(new Token(TokenType.NUMBER, sequence.toString(), String.valueOf(Double.parseDouble(sequence.toString())), line));
     }
 
-    void handleIdentifiers(){
+    void handleIdentifiers() {
         StringBuilder sequence = new StringBuilder();
         int current = position;
         char character = sourceFile.charAt(current);
         while (!isAtEnd(current) && isAlphanumeric(character)) {
             sequence.append(character);
-            if(!isAtEnd(current + 1)) character = sourceFile.charAt(current + 1);
+            if (!isAtEnd(current + 1)) character = sourceFile.charAt(current + 1);
             current++;
         }
         position = --current;
-        if(keywords.get(sequence.toString()) != null){
+        if (keywords.get(sequence.toString()) != null) {
             tokens.add(new Token(keywords.get(sequence.toString()), sequence.toString(), null, line));
-        }else{
+        } else {
             tokens.add(new Token(TokenType.IDENTIFIER, sequence.toString(), null, line));
         }
     }
 
-    void printTokens(){
-        for(Token token: tokens){
+    void printTokens() {
+        for (Token token : tokens) {
             System.out.println(token);
         }
     }
 
-    public void scanTokens() {
+    public List<Token> scanTokens() {
         for (position = 0; !isAtEnd(position); position++) {
             char c = sourceFile.charAt(position);
             switch (c) {
@@ -190,7 +190,7 @@ public class Scanner {
                             c = sourceFile.charAt(position);
                             position++;
                         }
-                        position --;
+                        position--;
                         line++;
                         break;
                     }
@@ -199,14 +199,15 @@ public class Scanner {
                 case '"':
                     handleStrings();
                     break;
-                case ' ', '\t', '\r': break;
+                case ' ', '\t', '\r':
+                    break;
                 case '\n':
                     line++;
                     break;
                 default:
-                    if(isDigit(c)){
+                    if (isDigit(c)) {
                         handleNumbers();
-                    } else if(isAlphanumeric(c)){
+                    } else if (isAlphanumeric(c)) {
                         handleIdentifiers();
                     } else {
                         error(line, "Unexpected character: " + c, 65);
@@ -215,9 +216,8 @@ public class Scanner {
             }
         }
         tokens.add(new Token(TokenType.EOF));
+        return tokens;
     }
-
-
 }
 
 

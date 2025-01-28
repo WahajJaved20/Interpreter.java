@@ -1,8 +1,8 @@
 public class Token {
-    private TokenType tokenType;
-    private int line;
-    private String lexeme;
-    private String literal;
+    public TokenType tokenType;
+    public int line;
+    public String lexeme;
+    public String literal;
 
     Token(TokenType tokenType) {
         this.tokenType = tokenType;
