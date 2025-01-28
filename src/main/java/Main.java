@@ -47,7 +47,12 @@ public class Main {
             List<Token> tokens = scanner.scanTokens();
             if(scanner.hadScanningError) System.exit(65);
             Parser parser = new Parser(tokens);
-            List<Stmt> statements = parser.parse();
+            List<Stmt> statements = List.of();
+            try{
+                 statements = parser.parse();
+            }catch (Exception e){
+                System.exit(65);
+            }
             if (parser.hadError) System.exit(parser.getErrorCode());
             Interpreter interpreter = new Interpreter();
             interpreter.interpret(statements);
