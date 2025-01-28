@@ -1,3 +1,1 @@
- // Print statements expect an expression
-// So, this program leads to a compilation error
- print;
+"world" < false

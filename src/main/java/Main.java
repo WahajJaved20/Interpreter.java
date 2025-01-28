@@ -51,7 +51,6 @@ public class Main {
             try{
                  statements = parser.parse();
             }catch (Exception e){
-                System.exit(65);
             }
             if (parser.hadError) System.exit(parser.getErrorCode());
             Interpreter interpreter = new Interpreter();
