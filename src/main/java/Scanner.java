@@ -110,7 +110,7 @@ public class Scanner {
             }
         }
         position = --current;
-        tokens.add(new Token(TokenType.NUMBER, sequence.toString(), String.valueOf(Double.parseDouble(sequence.toString())), line));
+        tokens.add(new Token(TokenType.NUMBER, sequence.toString(), Double.parseDouble(sequence.toString()), line));
     }
 
     void handleIdentifiers() {

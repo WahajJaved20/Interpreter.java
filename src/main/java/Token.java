@@ -2,7 +2,7 @@ public class Token {
     public TokenType tokenType;
     public int line;
     public String lexeme;
-    public String literal;
+    public Object literal;
 
     Token(TokenType tokenType) {
         this.tokenType = tokenType;
@@ -18,7 +18,7 @@ public class Token {
         this.line = line;
     }
 
-    Token(TokenType tokenType, String lexeme, String literal, int line) {
+    Token(TokenType tokenType, String lexeme, Object literal, int line) {
         this.tokenType = tokenType;
         this.lexeme = lexeme;
         this.literal = literal;

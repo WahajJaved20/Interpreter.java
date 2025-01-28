@@ -29,14 +29,18 @@ public class Main {
         String fileContents = readFileContents(filename);
         Scanner scanner = new Scanner(fileContents);
         List<Token> tokens = scanner.scanTokens();
+        Parser parser = new Parser(tokens);
+        Expr expression = parser.parse();
         if (command.equals("tokenize")) {
             scanner.printTokens();
             System.exit(scanner.getErrorCode());
-        }else if(command.equals("parse")){
-            Parser parser = new Parser(tokens);
-            Expr expression = parser.parse();
-            if(parser.hadError) System.exit(parser.getErrorCode());
+        } else if (command.equals("parse")) {
+            if (parser.hadError) System.exit(parser.getErrorCode());
             System.out.println(new AstPrinter().print(expression));
+        } else if(command.equals("evaluate")){
+            Interpreter interpreter = new Interpreter();
+            interpreter.interpret(expression);
+            if(interpreter.hadRuntimeError) System.exit(70);
         }
     }
 }
