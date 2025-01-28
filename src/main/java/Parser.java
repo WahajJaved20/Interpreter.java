@@ -124,8 +124,8 @@ public class Parser {
         }
     }
 
-    private void report(int line, String message, String where) {
-        System.err.println("[line " + line + "] Error: " + message);
+    private void report(int line, String where, String message) {
+        System.err.println("[line " + line + "] Error: " + where + ": " + message);
         this.hadError = true;
     }
 
