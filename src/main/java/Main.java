@@ -42,7 +42,7 @@ public class Main {
             Expr expression = parser.parseExpression();
             if (parser.hadError) System.exit(parser.getErrorCode());
             System.out.println(new AstPrinter().print(expression));
-        } else if(command.equals("evaluate")){
+        } else if(command.equals("evaluate") || command.equals("run")){
             Scanner scanner = new Scanner(fileContents);
             List<Token> tokens = scanner.scanTokens();
             if(scanner.hadScanningError) System.exit(65);
