@@ -14,9 +14,10 @@ import java.util.List;
         program        → declaration* EOF ;
         block          → "{" declaration* "}" ;
         declaration    → varDecl | statement ;
-        statement      → exprStmt | printStmt | block | ifStmt;
+        statement      → exprStmt | printStmt | block | ifStmt | whileStmt;
         ifStmt         → "if" "(" expression ")" statement ( "else" statement )? ;
         varDecl        → "var" IDENTIFIER ( "=" expression )? ";" ;
+        whileStmt      → "while" "(" expression ")" statement ;
  */
 
 /*
@@ -258,8 +259,17 @@ public class Parser {
     private Stmt statement() {
         if (match(TokenType.PRINT)) return printStatement();
         if (match(TokenType.IF)) return ifStatement();
+        if(match(TokenType.WHILE)) return whileStatement();
         if (match(TokenType.LEFT_BRACE)) return new Stmt.Block(block());
         return expressionStatement();
+    }
+
+    private Stmt whileStatement() {
+        consume(TokenType.LEFT_PAREN, "Expect '(' after 'if'.");
+        Expr condition = expression();
+        consume(TokenType.RIGHT_PAREN, "Expect ')' after if condition.");
+        Stmt body = statement();
+        return new Stmt.While(condition, body);
     }
 
     private Stmt ifStatement() {
