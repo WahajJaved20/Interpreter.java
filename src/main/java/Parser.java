@@ -14,10 +14,11 @@ import java.util.List;
         program        → declaration* EOF ;
         block          → "{" declaration* "}" ;
         declaration    → varDecl | statement ;
-        statement      → exprStmt | printStmt | block | ifStmt | whileStmt;
+        statement      → exprStmt | printStmt | block | ifStmt | whileStmt | forStmt;
         ifStmt         → "if" "(" expression ")" statement ( "else" statement )? ;
         varDecl        → "var" IDENTIFIER ( "=" expression )? ";" ;
         whileStmt      → "while" "(" expression ")" statement ;
+        forStmt        → "for" "(" ( varDecl | exprStmt | ";" ) expression? ";" expression? ")" statement ;
  */
 
 /*

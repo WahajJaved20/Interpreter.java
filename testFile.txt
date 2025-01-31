@@ -1,1 +1,5 @@
-if (true) if (true) print "nested true";
+var quz = 0;
+while (quz < 3) {
+  print quz;
+  quz = quz + 1;
+}
