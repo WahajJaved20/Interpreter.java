@@ -14,7 +14,8 @@ import java.util.List;
         program        → declaration* EOF ;
         block          → "{" declaration* "}" ;
         declaration    → varDecl | statement ;
-        statement      → exprStmt | printStmt | block ;
+        statement      → exprStmt | printStmt | block | ifStmt;
+        ifStmt         → "if" "(" expression ")" statement ( "else" statement )? ;
         varDecl        → "var" IDENTIFIER ( "=" expression )? ";" ;
  */
 
@@ -37,6 +38,14 @@ import java.util.List;
         primary        → NUMBER | STRING | "true" | "false" | "nil"
                        | "(" expression ")" | IDENTIFIER;
  */
+
+/*
+        expression     → assignment ;
+        assignment     → IDENTIFIER "=" assignment | logic_or ;
+        logic_or       → logic_and ( "or" logic_and )* ;
+        logic_and      → equality ( "and" equality )* ;
+
+ */
 /* PARSING TECHNIQUE => RECURSIVE DESCENT PARSING */
 public class Parser {
     private static class ParseError extends RuntimeException {
@@ -56,7 +65,7 @@ public class Parser {
     }
 
     private Expr assignment(){
-        Expr expr = equality();
+        Expr expr = or();
         if (match(TokenType.EQUAL)){
             Token equals = previous();
             Expr value = assignment();
@@ -68,6 +77,27 @@ public class Parser {
         }
         return expr;
     }
+
+    private Expr or() {
+        Expr expr = and();
+        while (match(TokenType.OR)) {
+            Token operator = previous();
+            Expr right = and();
+            expr = new Expr.Logical(expr, operator, right);
+        }
+        return expr;
+    }
+
+    private Expr and() {
+        Expr expr = equality();
+        while (match(TokenType.AND)) {
+            Token operator = previous();
+            Expr right = equality();
+            expr = new Expr.Logical(expr, operator, right);
+        }
+        return expr;
+    }
+
     private Expr equality() {
         Expr expr = comparison();
         while (match(TokenType.BANG_EQUAL, TokenType.EQUAL_EQUAL)) {
@@ -227,8 +257,23 @@ public class Parser {
 
     private Stmt statement() {
         if (match(TokenType.PRINT)) return printStatement();
+        if (match(TokenType.IF)) return ifStatement();
         if (match(TokenType.LEFT_BRACE)) return new Stmt.Block(block());
         return expressionStatement();
+    }
+
+    private Stmt ifStatement() {
+        consume(TokenType.LEFT_PAREN, "Expect '(' after 'if'.");
+        Expr condition = expression();
+        consume(TokenType.RIGHT_PAREN, "Expect ')' after if condition.");
+
+        Stmt thenBranch = statement();
+        Stmt elseBranch = null;
+        if (match(TokenType.ELSE)) {
+            elseBranch = statement();
+        }
+
+        return new Stmt.If(condition, thenBranch, elseBranch);
     }
 
     private List<Stmt> block() {
