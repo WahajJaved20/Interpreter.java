@@ -1,5 +1,5 @@
-var quz = 0;
-while (quz < 3) {
-  print quz;
-  quz = quz + 1;
+fun sayHi(first, last) {
+  print "Hi, " + first + " " + last + "!";
 }
+
+sayHi("Dear", "Reader");
