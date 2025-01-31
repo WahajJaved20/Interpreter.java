@@ -18,7 +18,8 @@ import java.util.List;
         funDecl        → "fun" function ;
         function       → IDENTIFIER "(" parameters? ")" block ;
         parameters     → IDENTIFIER ( "," IDENTIFIER )* ;
-        statement      → exprStmt | printStmt | block | ifStmt | whileStmt | forStmt;
+        statement      → exprStmt | printStmt | block | ifStmt | whileStmt | forStmt | returnStmt;
+        returnStmt     → "return" expression? ";" ;
         ifStmt         → "if" "(" expression ")" statement ( "else" statement )? ;
         varDecl        → "var" IDENTIFIER ( "=" expression )? ";" ;
         whileStmt      → "while" "(" expression ")" statement ;
@@ -297,8 +298,20 @@ public class Parser {
         if (match(TokenType.IF)) return ifStatement();
         if(match(TokenType.WHILE)) return whileStatement();
         if(match(TokenType.FOR)) return forStatement();
+        if(match(TokenType.RETURN)) return returnStatement();
         if (match(TokenType.LEFT_BRACE)) return new Stmt.Block(block());
         return expressionStatement();
+    }
+
+    private Stmt returnStatement() {
+        Token keyword = previous();
+        Expr value = null;
+        if (!check(TokenType.SEMICOLON)) {
+            value = expression();
+        }
+
+        consume(TokenType.SEMICOLON, "Expect ';' after return value.");
+        return new Stmt.Return(keyword, value);
     }
 
     private Stmt forStatement() {
